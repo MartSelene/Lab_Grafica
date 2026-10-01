@@ -95,6 +95,10 @@ int main( )
     
     // Load models
     Model dog((char*)"Models/RedDog.obj");
+    //// gato
+    Model cat((char*)"Models/miGato.obj");
+
+
     glm::mat4 projection = glm::perspective( camera.GetZoom( ), ( float )SCREEN_WIDTH/( float )SCREEN_HEIGHT, 0.1f, 100.0f );
     
   
@@ -121,11 +125,69 @@ int main( )
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-        // Draw the loaded model
-        glm::mat4 model(1);
+        //// Draw the loaded model
+        /////// Perro
+        //glm::mat4 model(1);
+        //glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        //dog.Draw(shader);
+
+        // Draw the loaded models
+//
+//// PERRO 
+//        glm::mat4 model (1);
+//        model = glm::translate(model, glm::vec3(-1.5f, 0.0f, 0.0f)); // Posición perro (izquierda)
+//        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+//        dog.Draw(shader);
+//       //////perro 2 
+//       // glm::mat4 model(1);
+//       // model = glm::translate(model, glm::vec3(-2.0f, 0.0f, 2.0f)); // Posición perro (izquierda)
+//       // glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+//       // dog.Draw(shader); 
+//
+//        // GATO 
+//        model = glm::mat4(1); // Reutilizamos la misma variable model
+//        model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f)); // Posición gato (derecha)
+//        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+//        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+//        cat.Draw(shader);
+//
+//        // gato 2----
+//
+//        //model = glm::mat4(1); // Reutilizamos la misma variable model
+//        //model = glm::translate(model, glm::vec3(2.5f, 0.0f, -2.0f)); // Posición gato (
+//        //model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+//        //glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+//        //cat.Draw(shader);
+        //  PERRO 1 
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-1.5f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(100.0f), glm::vec3(2.0f, 1.0f, 1.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         dog.Draw(shader);
 
+        //  PERRO 2 (NUEVO CON TRANSFORMACIONES) 
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-5.0f, 3.0f, -5.0f)); // 1. Traslación
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(3.0f, 1.0f, 0.0f)); // 2. Rotación de 45° en el eje Y
+        model = glm::scale(model, glm::vec3(1.3f, 1.3f, 1.3f)); // 3. Escalación (30% más grande)
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        dog.Draw(shader);
+
+        // gATO 1
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+        model = glm::rotate(model, glm::radians(-40.0f), glm::vec3(2.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        cat.Draw(shader);
+
+        // GATO 2 
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(5.0f, 0.0f, -2.0f)); // 1. Traslación
+        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // 2. Rotación de -90° (girado hacia el lado)
+        model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.15f)); // 3. Escalación (un poco más pequeño)
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        cat.Draw(shader);
         // Swap the buffers
         glfwSwapBuffers( window );
     }
