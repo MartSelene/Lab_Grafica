@@ -42,7 +42,8 @@ bool firstMouse = true;
 // Light attributes
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 bool active;
-
+//variable
+float spotLightIntensity = 1.0f;
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
 	glm::vec3(-1.5f,0.5f, -1.5f),
@@ -267,7 +268,24 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[3].quadratic"), 0.032f);
 
 		// SpotLight
+		
+		// SpotLight
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.ambient"), 0.0f, 0.0f, 0.0f);
+
+		
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.diffuse"), 1.0f * spotLightIntensity, 1.0f * spotLightIntensity, 1.0f * spotLightIntensity);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.specular"), 1.0f * spotLightIntensity, 1.0f * spotLightIntensity, 1.0f * spotLightIntensity);
+
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.constant"), 1.0f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.linear"), 0.09f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.quadratic"), 0.032f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.cutOff"), glm::cos(glm::radians(12.5f))); // Asegúrate de darle un ángulo visible, ej: 12.5°
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.outerCutOff"), glm::cos(glm::radians(17.5f)));
+		
+		
+		/*glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.ambient"), 0.0f, 0.0f, 0.0f);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.diffuse"), 0.0f, 0.0f, 0.0f);
@@ -276,7 +294,7 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.linear"), 0.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.quadratic"), 0.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.cutOff"), glm::cos(glm::radians(12.0f)));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.outerCutOff"), glm::cos(glm::radians(18.0f)));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.outerCutOff"), glm::cos(glm::radians(18.0f)));*/
 
 		// Set material properties
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 5.0f);
@@ -450,6 +468,19 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 		{
 			Light1 = glm::vec3(0);//Cuado es solo un valor en los 3 vectores pueden dejar solo una componente
 		}
+	}
+	
+	if (key == GLFW_KEY_B && action == GLFW_PRESS)
+	{
+		
+		if (spotLightIntensity >= 1.0f)
+			spotLightIntensity = 0.3f; // Atenuada
+		else if (spotLightIntensity == 0.3f)
+			spotLightIntensity = 0.0f; // Apagada por completo
+		else
+			spotLightIntensity = 1.0f; // Brillante otra vez
+
+		std::cout << "Intensidad SpotLight: " << spotLightIntensity << std::endl;
 	}
 }
 
